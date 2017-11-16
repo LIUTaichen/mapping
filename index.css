@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+#mapid{
+height:700px;
+}
+
+.plantTable, .plantTable th, .plantTable td{
+  border:solid 1px;
+  border-collapse: collapse;
+
+}
+
+.plantTable th, .plantTable td{
+  padding-left:10px;
+  padding-right:10px;
+}
+.plantTable.lightGreen th{
+  background-color: lightgreen;
+}
+
+.plantTable.blue th{
+  background-color: lightskyblue;
+}
+
+.plantTable.pink th{
+  background-color: pink;
+}
+
+.plants{
+  max-height:400px;
+  overflow:auto;
+}
+
