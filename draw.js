@@ -134,6 +134,44 @@ function processData(){
         }
     }
 
+    for(let project of projects){
+
+        if(project['Requires Booking']){
+          
+            let yellowFleetAssetCategories =["Tippers",
+            "Motor Scrapers",
+            "Hydraulic Excavators",
+            "Tractors",
+            "Bulldozers",
+            "Dump Trucks",
+            "Wheel Loaders",
+            "Rollers",
+            "Heavy Machinery",
+            "Compactors Hd Earthmoving",
+            "Motor Graders"];
+            let vehicles = [];
+            let smallPlants = [];
+            let yellowFleet = [];
+            for(let plant of project['Requires Booking']){
+    
+                if(yellowFleetAssetCategories.includes(plant['Asset Type'])){
+                    yellowFleet.push(plant);
+                }else if(plant['GPS']){
+                    vehicles.push(plant);
+                }else{
+                    smallPlants.push(plant);
+                }
+            }
+            project['vehiclesRequired'] = vehicles;
+            project['yellowFleetRequired'] = yellowFleet;
+            project['smallPlantsRequired'] = smallPlants;
+            console.log("project when assembling");   
+            console.log(project);
+    
+        }
+    }
+    console.log("projects");   
+    console.log(projects);  
     drawMarkers(projects);
    
 }
@@ -155,10 +193,47 @@ function convertRowToObject(data){
 
 function drawMarkers(projects){
     for(const project of projects){
-        let marker = L.marker([project.Lat,project.Lng]);
-        let descriptionHtml = preparePopupHtml(project);
-        marker.bindPopup(descriptionHtml);
-        marker.addTo(mymap);
+        if(project['Requires Booking'] || project['Completed']){
+            let marker;
+            marker = L.marker([project.Lat,project.Lng],{
+                icon: new L.AwesomeNumberMarkers({
+                    number: 1,
+                    markerColor:"blue"
+                })
+            });
+             if(project['yellowFleetRequired'] && project['yellowFleetRequired'].length){
+                marker = L.marker([project.Lat,project.Lng],{
+                    icon: new L.AwesomeNumberMarkers({
+                        number: project['yellowFleetRequired'].length,
+                        markerColor:"orange"
+                    })
+                });
+
+            }
+        
+            else if(project['vehiclesRequired'] && project['vehiclesRequired'].length){
+                marker = L.marker([project.Lat,project.Lng],{
+                    icon: new L.AwesomeNumberMarkers({
+                        number: project['vehiclesRequired'].length,
+                        markerColor:"red"
+                    })
+                });
+
+            }
+        
+            else if(project['smallPlantsRequired'] && project['smallPlantsRequired'].length){
+                marker = L.marker([project.Lat,project.Lng],{
+                    icon: new L.AwesomeNumberMarkers({
+                        number: project['smallPlantsRequired'].length,
+                        markerColor:"purple"
+                    })
+                });
+            }
+           
+            let descriptionHtml = preparePopupHtml(project);
+            marker.bindPopup(descriptionHtml);
+            marker.addTo(mymap);
+        }
 
     }
     
@@ -181,15 +256,41 @@ function preparePopupHtml(project){
         }
         htmlString += '</table>';
     }
-    if(project['Requires Booking']){
-        htmlString += '<h3>Plants requiring booking</h3>';
-        htmlString += '<table class="plantTable pink"><tr><th>Plant #</th><th>Description</th><th>Device Needed</th>';
-        for(let plant of project['Requires Booking']){
-               htmlString += convertPlantToTableRow(plant);
-           }
-        
+     
+    if(project['yellowFleetRequired'] && project['yellowFleetRequired'].length){
+        console.log("yellowFleet");
+        console.log(project['yellowFleetRequired']);
+        htmlString += '<h3>Yellow Fleet requiring booking</h3>';
+        htmlString += '<table class="plantTable yellow"><tr><th>Plant #</th><th>Description</th><th>Device Needed</th>';
+        for(let yellow of project['yellowFleetRequired']){
+            htmlString += convertPlantToTableRow(yellow);
+        }
         htmlString += '</table>';
     }
+
+    if(project['vehiclesRequired'] && project['vehiclesRequired'].length){
+        console.log("vehicles");
+        console.log(project['vehiclesRequired']);
+        htmlString += '<h3>Vehicles requiring booking</h3>';
+        htmlString += '<table class="plantTable red"><tr><th>Plant #</th><th>Description</th><th>Device Needed</th>';
+        for(let vehicle of project['vehiclesRequired']){
+            htmlString += convertPlantToTableRow(vehicle);
+        }
+        htmlString += '</table>';
+    }
+
+    if(project['smallPlantsRequired'] && project['smallPlantsRequired'].length){
+        console.log("smallPlants");
+        console.log(project['smallPlantsRequired']);
+        htmlString += '<h3>Small plants requiring booking</h3>';
+        htmlString += '<table class="plantTable purple"><tr><th>Plant #</th><th>Description</th><th>Device Needed</th>';
+        for(let smallPlant of project['smallPlantsRequired']){
+            htmlString += convertPlantToTableRow(smallPlant);
+        }
+        htmlString += '</table>';
+    }
+    
+    
     if(project['Completed']){
         htmlString += '<h3>Plants completed</h3>';
         htmlString += '<table class="plantTable lightGreen"><tr><th>Plant #</th><th>Description</th><th>Device Needed</th>';

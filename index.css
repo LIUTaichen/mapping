@@ -29,6 +29,18 @@ height:700px;
   background-color: pink;
 }
 
+
+.plantTable.purple th{
+  background-color: purple;
+}
+
+.plantTable.yellow th{
+  background-color: yellow;
+}
+
+.plantTable.red th{
+  background-color: red;
+}
 .plants{
   max-height:400px;
   overflow:auto;

@@ -1,5 +1,7 @@
-var CLIENT_ID = '676408930964-1lkbkp4ri2k3p3shv1daa71b7rvbvh6m.apps.googleusercontent.com';
+var CLIENT_ID = '676408930964-2pvbodm5bmn2ehdq54ilsg6r10lvukb7.apps.googleusercontent.com';
+//var CLIENT_ID ='676408930964-1lkbkp4ri2k3p3shv1daa71b7rvbvh6m.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyDYeRC_Z2a9UrBLHaQ6yfgUilQZukYiYrA';
+//var API_KEY = '1ZfA3O9hBD9jN2_uOF1cD01G';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
@@ -143,7 +145,7 @@ function getPlantList () {
 function getProjectList () {
     console.log(plants);
   gapi.client.sheets.spreadsheets.values.get({
-    spreadsheetId: '1OkEO3P4UpSbDe_-tz5OwKuHNRTk1M277bDAtpmAZZIA',
+    spreadsheetId: '16VdfZZNiHPtd9f6MkXjOhXMrvXtTBRZ2wazjracgYkw',
     range: 'Projects!A1:T',
   }).then(function(response) {
     var range = response.result;
